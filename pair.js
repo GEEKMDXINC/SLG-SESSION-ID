@@ -22,7 +22,7 @@ function removeFile(FilePath) {
 
 router.get('/', async (req, res) => {
     let num = req.query.number;
-    async function PrabathPair() {
+    async function slgpairfonction() {
         const { state, saveCreds } = await useMultiFileAuthState(`./session`);
         try {
             let slgpair = makeWASocket({
@@ -38,13 +38,13 @@ router.get('/', async (req, res) => {
             if (!slgpair.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await PrabathPairWeb.requestPairingCode(num);
+                const code = await slgpair.requestPairingCode(num);
                 if (!res.headersSent) {
                     await res.send({ code });
                 }
             }
 
-            PrabathPairWeb.ev.on('creds.update', saveCreds);
+            slgpair.ev.on('creds.update', saveCreds);
             PrabathPairWeb.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
                 if (connection === "open") {
@@ -76,7 +76,7 @@ router.get('/', async (req, res) => {
                         });
 
                     } catch (e) {
-                        exec('pm2 restart prabath');
+                        exec('pm2 restart slg');
                     }
 
                     await delay(100);
@@ -97,7 +97,7 @@ router.get('/', async (req, res) => {
             }
         }
     }
-    return await PrabathPair();
+    return await slgpairfonction();
 });
 
 process.on('uncaughtException', function (err) {
