@@ -4,7 +4,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require("child_process");
-let router = express.Router()
+let app = express.Router()
 const pino = require("pino");
 const {
     default: makeWASocket,
@@ -18,7 +18,7 @@ const { upload } = require('./mega');
 
 const sessionDir = path.join(__dirname, './session');
 
-router.get('/', async (req, res) => {
+app.get('/', async (req, res) => {
     let num = req.query.number;
     async function slgpairfonction() {
 
@@ -108,4 +108,4 @@ process.on('uncaughtException', function (err) {
 });
 
 
-module.exports = router;
+module.exports = app;
