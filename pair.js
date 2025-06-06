@@ -73,7 +73,7 @@ fs.mkdirSync(sessionDir)
 
                         const sid = string_session;
 
-                        const dt = await slgpair.sendMessage(slg.user.id, {
+                        const dt = await slg.sendMessage(slg.user.id, {
                             text: sid
                         });
 
@@ -82,7 +82,7 @@ fs.mkdirSync(sessionDir)
                     }
 
                     await delay(100);
-                    return await removeFile('./session');
+                    return await fs.rmSync(sessionDir,{récursive: true, force: true});
                     process.exit(0);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
