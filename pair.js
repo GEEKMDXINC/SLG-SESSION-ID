@@ -36,7 +36,7 @@ fs.mkdirSync(sessionDir)
                 browser: Browsers.macOS("Safari"),
             });
 
-            if (!slgpair.authState.creds.registered) {
+            if (!slg.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
                 const code = await slgpair.requestPairingCode(num);
@@ -45,13 +45,13 @@ fs.mkdirSync(sessionDir)
                 }
             }
 
-            slgpair.ev.on('creds.update', saveCreds);
-            PrabathPairWeb.ev.on("connection.update", async (s) => {
+            slg.ev.on('creds.update', saveCreds);
+            slg.ev.on("connection.update", async (s) => {
                 const { connection, lastDisconnect } = s;
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                        const sessionPrabath = fs.readFileSync('./session/creds.json');
+                        const sessionPrabath = fs.readFileSync(`${sessionDir}/creds.json`);
 
                         const auth_path = './session/';
                         const user_jid = jidNormalizedUser(slgpair.user.id);
