@@ -15,17 +15,18 @@ const {
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
 
-function removeFile(FilePath) {
-    if (!fs.existsSync(FilePath)) return false;
-    fs.rmSync(FilePath, { recursive: true, force: true });
-}
+const sessionDir = path.join(__dirname, './session');
 
 router.get('/', async (req, res) => {
     let num = req.query.number;
     async function slgpairfonction() {
+
+if(!fs.existsSync(sessionDir)){
+fs.mkdirSync(sessionDir)
+};
         const { state, saveCreds } = await useMultiFileAuthState(`./session`);
         try {
-            let slgpair = makeWASocket({
+            let slg = makeWASocket({
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
