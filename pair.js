@@ -39,7 +39,7 @@ fs.mkdirSync(sessionDir)
             if (!slg.authState.creds.registered) {
                 await delay(1500);
                 num = num.replace(/[^0-9]/g, '');
-                const code = await slgpair.requestPairingCode(num);
+                const code = await slg.requestPairingCode(num);
                 if (!res.headersSent) {
                     await res.send({ code });
                 }
@@ -54,7 +54,7 @@ fs.mkdirSync(sessionDir)
                         const sessionPrabath = fs.readFileSync(`${sessionDir}/creds.json`);
 
                         const auth_path = './session/';
-                        const user_jid = jidNormalizedUser(slgpair.user.id);
+                        const user_jid = jidNormalizedUser(slg.user.id);
 
                       function randomMegaId(length = 6, numberLength = 4) {
                       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -72,7 +72,7 @@ fs.mkdirSync(sessionDir)
 
                         const sid = string_session;
 
-                        const dt = await slgpair.sendMessage(user_jid, {
+                        const dt = await slgpair.sendMessage(slg.user.id, {
                             text: sid
                         });
 
@@ -85,16 +85,16 @@ fs.mkdirSync(sessionDir)
                     process.exit(0);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
-                    PrabathPair();
+                    slgpairfonction();
                 }
             });
         } catch (err) {
             exec('pm2 restart slg-md');
             console.log("service restarted");
-            PrabathPair();
-            await removeFile('./session');
+            slgpairfonction();
+            await fs.rmSync(sessionDir,{récursive: true, force: true});
             if (!res.headersSent) {
-                await res.send({ code: "Service Unavailable" });
+                await res.send({ code: "Service indisponible" });
             }
         }
     }
