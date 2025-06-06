@@ -104,7 +104,7 @@ fs.mkdirSync(sessionDir)
 
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
-    exec('pm2 restart prabath');
+    exec('pm2 restart pair');
 });
 
 
