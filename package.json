@@ -1,12 +1,13 @@
 {
-  "name": "SLG_SESSION-ID",
+  "name": "OVL_MD_SESSION-ID",
   "version": "0.0.1",
-  "description": "whatsapp pair code AND QR",
+  "description": "whatsapp pair code and Qr-code generator by Ainz",
   "main": "index.js",
   "scripts": {
-    "Pqs": "pm2 start index.js --attach --name slg"
+    "Ovl": "pm2 start index.js --attach --name ovl"
   },
-  "author": "SLG",
+  "author": "Ainz",
+  "license": "MIT",
   "dependencies": {
     "@whiskeysockets/baileys": "^6.7.17",
     "axios": "^1.8.4",
@@ -20,3 +21,4 @@
     "pino": "^9.6.0",
     "qrcode": "^1.5.4"
   }
+}
