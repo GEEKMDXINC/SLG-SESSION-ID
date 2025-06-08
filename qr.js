@@ -47,7 +47,9 @@ fs.mkdirSync(sessionDir)
 
        if (qr) {
       try {
-                                        if (qr) await res.end(await QRCode.toBuffer(qr))
+                                 const qrBuffer = await QRCode.toBuffer(qr);
+await res.end(qrBuffer);
+
       } catch (err) {
         console.error('Erreur lors de la génération du QR code :', err);
         if (!res.headersSent) {
