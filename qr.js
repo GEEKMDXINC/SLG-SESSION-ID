@@ -17,7 +17,7 @@ const {
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
-const { toDataUrl } = require('qrcode');
+const { QRCode } = require('qrcode');
 
 const sessionDir = path.join(__dirname, './session');
 
@@ -39,14 +39,6 @@ fs.mkdirSync(sessionDir)
                 browser: Browsers.macOS("Safari"),
             });
 
-         const qrOptions = {
-    width: req.query.width || 270,
-    height: req.query.height || 270,
-    color: {
-      dark: req.query.darkColor || '#000000',
-      light: req.query.lightColor || '#ffffff'
-    }
-  };
 
             slg.ev.on('creds.update', saveCreds);
             slg.ev.on("connection.update", async (s) => {
@@ -55,11 +47,7 @@ fs.mkdirSync(sessionDir)
 
        if (qr) {
       try {
-        const qrDataURL = await toDataURL(qr, qrOptions);
-        const data = qrDataURL.split(',')[1];
-        if (!res.headersSent) {
-          res.send(data);
-        }
+                                        if (qr) await res.end(await QRCode.toBuffer(qr))
       } catch (err) {
         console.error('Erreur lors de la génération du QR code :', err);
         if (!res.headersSent) {
