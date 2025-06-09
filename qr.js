@@ -8,6 +8,7 @@ const path = require('path');
 const { exec } = require("child_process");
 let app = express.Router()
 const pino = require("pino");
+const { toDataURL } = require('qrcode');
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -17,7 +18,6 @@ const {
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
-const { QRCode } = require('qrcode');
 
 const sessionDir = path.join(__dirname, './session');
 
@@ -39,17 +39,27 @@ fs.mkdirSync(sessionDir)
                 browser: Browsers.macOS("Safari"),
             });
 
+  const qrOptions = {
+    width: req.query.width || 270,
+    height: req.query.height || 270,
+    color: {
+      dark: req.query.darkColor || '#000000',
+      light: req.query.lightColor || '#ffffff'
+    }
+  };
 
-            slg.ev.on('creds.update', saveCreds);
-            slg.ev.on("connection.update", async (s) => {
-                const { connection, lastDisconnect, qr } = s;
+  sock.ev.on('creds.update', saveCreds);
 
+  sock.ev.on('connection.update', async (update) => {
+    const { connection, lastDisconnect, qr } = update;
 
-       if (qr) {
+    if (qr) {
       try {
-                                 const qrBuffer = await QRCode.toBuffer(qr);
-await res.end(qrBuffer);
-
+        const qrDataURL = await toDataURL(qr, qrOptions);
+        const data = qrDataURL.split(',')[1];
+        if (!res.headersSent) {
+          res.send(data);
+        }
       } catch (err) {
         console.error('Erreur lors de la génération du QR code :', err);
         if (!res.headersSent) {
