@@ -82,7 +82,7 @@ fs.mkdirSync(sessionDir)
                     }
 
                     await delay(100);
-                    return await fs.rmSync(sessionDir,{récursive: true, force: true});
+                    return await fs.rmSync(sessionDir,{recursive: true, force: true});
                     process.exit(0);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
@@ -93,7 +93,7 @@ fs.mkdirSync(sessionDir)
             exec('pm2 restart slg-md');
             console.log("service restarted");
             slgpairfonction();
-            await fs.rmSync(sessionDir,{récursive: true, force: true});
+            await fs.rmSync(sessionDir,{recursive: true, force: true});
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
