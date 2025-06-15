@@ -72,14 +72,17 @@ fs.mkdirSync(sessionDir)
 console.log("Envoi a méga réussi")
 
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
+console.log(string_session)
 
                         const sid = string_session;
 
                         const dt = await slg.sendMessage(slg.user.id, {
                             text: sid
-                        });
+                        })
 
                     } catch (e) {
+ console("erreur méga url");
+
                         exec('pm2 restart slg');
                     }
 
