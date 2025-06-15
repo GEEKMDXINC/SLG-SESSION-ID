@@ -69,6 +69,8 @@ fs.mkdirSync(sessionDir)
 
                         const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
 
+console.log("Envoi a méga réussi")
+
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
 
                         const sid = string_session;
