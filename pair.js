@@ -54,9 +54,7 @@ if (fs.existsSync('./session')) {
                         await delay(10000);
                         const sessionPrabath = fs.readFileSync(`${sessionDir}/creds.json`);
 
-                        const auth_path = './session/';
-                        const user_jid = jidNormalizedUser(slg.user.id);
-
+                        const auth_path = './session/';                   
                       function randomMegaId(length = 6, numberLength = 4) {
                       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                       let result = '';
@@ -74,10 +72,9 @@ console.log("Envoi a méga réussi")
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
 console.log(string_session)
 
-                        const sid = string_session;
-
+                     
                         const dt = await slg.sendMessage(slg.user.id, {
-                            text: sid
+                            text: string_session
                         })
 
                     } catch (e) {
