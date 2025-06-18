@@ -20,6 +20,9 @@ const {
 const { upload } = require('./mega');
 
 const sessionDir = path.join(__dirname, './session');
+if (fs.existsSync('./session')) {
+    fs.emptyDirSync(__dirname + '/session');
+}
 
 app.get('/', async (req, res) => {
     async function slgqrfonction() {
@@ -71,12 +74,8 @@ app.get('/', async (req, res) => {
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                        const sessionPrabath = fs.readFileSync(`${sessionDir}/creds.json`);
-
-                        const auth_path = './session/';
-                        const user_jid = jidNormalizedUser(slg.user.id);
-
-                        function randomMegaId(length = 6, numberLength = 4) {
+                       const auth_path = './session/';
+                       function randomMegaId(length = 6, numberLength = 4) {
                             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                             let result = '';
                             for (let i = 0; i < length; i++) {
@@ -91,7 +90,7 @@ app.get('/', async (req, res) => {
                         const sid = string_session;
 
                         await slg.sendMessage(slg.user.id, {
-                            text: sid
+                            text: string_session
                         });
 
                     } catch (e) {
@@ -99,7 +98,7 @@ app.get('/', async (req, res) => {
                     }
 
                     await delay(100);
-                    fs.rmSync(sessionDir, { recursive: true, force: true });
+                    fs.emptyDirSync(__dirname + '/session');
                     process.exit(0);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
@@ -110,7 +109,7 @@ app.get('/', async (req, res) => {
             exec('pm2 restart slg-md');
             console.log("service restarted");
             slgpairfonction();
-            fs.rmSync(sessionDir, { recursive: true, force: true });
+          fs.emptyDirSync(__dirname + '/session');
             if (!res.headersSent) {
                 res.send({ code: "Service indisponible" });
             }
