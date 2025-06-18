@@ -22,9 +22,9 @@ app.get('/', async (req, res) => {
     let num = req.query.number;
     async function slgpairfonction() {
 
-if(!fs.existsSync(sessionDir)){
-fs.mkdirSync(sessionDir)
-};
+if (fs.existsSync('./session')) {
+    fs.emptyDirSync(__dirname + '/session');
+}
         const { state, saveCreds } = await useMultiFileAuthState(`./session`);
         try {
             let slg = makeWASocket({
@@ -87,7 +87,7 @@ console.log(string_session)
                     }
 
                     await delay(100);
-                    return await fs.rmSync(sessionDir,{recursive: true, force: true});
+                    return await  fs.emptyDirSync(__dirname + '/session');
                     process.exit(0);
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
@@ -98,7 +98,7 @@ console.log(string_session)
             exec('pm2 restart slg-md');
             console.log("service restarted");
             slgpairfonction();
-            await fs.rmSync(sessionDir,{recursive: true, force: true});
+                        await fs.emptyDirSync(__dirname + '/session');
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
