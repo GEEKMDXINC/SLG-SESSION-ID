@@ -1,10 +1,8 @@
-// ici c'est le code pair 
-
 const express = require('express');
 const fs = require('fs-extra');
 const path = require('path');
 const { exec } = require("child_process");
-let app = express.Router()
+let app = express.Router();
 const pino = require("pino");
 const {
     default: makeWASocket,
@@ -16,19 +14,20 @@ const {
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
 const { getId } = require('./id');
-const Id = getId()
+const Id = getId();
 
-const sessionDir = path.join(__dirname, './session' + Id);
+const sessionDir = path.join(__dirname, 'session', Id.toString());
+
 if (fs.existsSync(sessionDir)) {
     fs.emptyDirSync(sessionDir);
 }
 
 app.get('/', async (req, res) => {
     let num = req.query.number;
-    async function slgpairfonction() {
-// remove file
 
-        const { state, saveCreds } = await useMultiFileAuthState(`./session/` + Id);
+    async function slgpairfonction() {
+        const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+
         try {
             let slg = makeWASocket({
                 auth: {
@@ -55,40 +54,37 @@ app.get('/', async (req, res) => {
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                
- const auth_path = __dirname + `/session/${Id}/creds.json`;                 
-                      function randomMegaId(length = 6, numberLength = 4) {
-                      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                      let result = '';
-                      for (let i = 0; i < length; i++) {
-                      result += characters.charAt(Math.floor(Math.random() * characters.length));
-                        }
-                       const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                        return `${result}${number}`;
+
+                        const auth_path = path.join(sessionDir, 'creds.json');
+
+                        function randomMegaId(length = 6, numberLength = 4) {
+                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                            let result = '';
+                            for (let i = 0; i < length; i++) {
+                                result += characters.charAt(Math.floor(Math.random() * characters.length));
+                            }
+                            const number = Math.floor(Math.random() * Math.pow(10, numberLength));
+                            return `${result}${number}`;
                         }
 
                         const mega_url = await upload(auth_path, `${randomMegaId()}.json`);
-
-console.log("Envoi a méga réussi")
+                        console.log("Envoi à méga réussi");
 
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
-console.log(string_session)
+                        console.log(string_session);
 
-                     
-                        const dt = await slg.sendMessage(slg.user.id, {
+                        await slg.sendMessage(slg.user.id, {
                             text: string_session
-                        })
+                        });
 
                     } catch (e) {
- console("erreur méga url");
-
+                        console.log("Erreur méga url");
                         exec('pm2 restart slg');
                     }
 
-                    await delay(100);
-                    return await  fs.emptyDirSync(sessionDir);
+                    fs.emptyDirSync(sessionDir);
                     await slg.ws.close();
-              
+
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
                     slgpairfonction();
@@ -96,14 +92,15 @@ console.log(string_session)
             });
         } catch (err) {
             exec('pm2 restart slg-md');
-            console.log("service restarted");
+            console.log("Service restarted");
             slgpairfonction();
-                        await fs.emptyDirSync(sessionDir);
+            fs.emptyDirSync(sessionDir);
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
         }
     }
+
     return await slgpairfonction();
 });
 
@@ -111,6 +108,5 @@ process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
     exec('pm2 restart pair');
 });
-
 
 module.exports = app;
