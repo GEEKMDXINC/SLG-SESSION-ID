@@ -13,10 +13,7 @@ const {
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
-const { getId } = require('./id');
-const Id = getId();
-
-const sessionDir = path.join(__dirname, 'session', Id.toString());
+const sessionDir = path.join(__dirname, 'session');
 
 if (fs.existsSync(sessionDir)) {
     fs.emptyDirSync(sessionDir);
