@@ -15,6 +15,8 @@ const {
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
+const { getId } = require('./id');
+const Id = getId()
 
 const sessionDir = path.join(__dirname, './session');
 
@@ -54,7 +56,7 @@ if (fs.existsSync('./session')) {
                         await delay(10000);
                         const sessionPrabath = fs.readFileSync(`${sessionDir}/creds.json`);
 
-                        const auth_path = './session/';                   
+                        const auth_path = __dirname + `/session/${Id}/creds.json`;                 
                       function randomMegaId(length = 6, numberLength = 4) {
                       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                       let result = '';
