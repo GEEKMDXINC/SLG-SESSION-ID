@@ -25,7 +25,7 @@ app.get('/', async (req, res) => {
     async function slgpairfonction() {
 // remove file
 
-        const { state, saveCreds } = await useMultiFileAuthState(`/session/` +  Id );
+        const { state, saveCreds } = await useMultiFileAuthState(`./session/` + Id);
         try {
             let slg = makeWASocket({
                 auth: {
