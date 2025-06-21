@@ -1,28 +1,33 @@
 // ici c'est pour les fonctions utiles de mégas 
-const mega = require("megajs");
-const auth = {
-    email: 'robers66158@x8oq.awesome47.com',
-    password: 'megaAinz1@',
-    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/12.246'
-}
+const Storage = require("megajs");
 
-const upload = (data, name) => {
-    return new Promise((resolve, reject) => {
-        try {
-            const storage = new mega.Storage(auth, () => {
-                data.pipe(storage.upload({name: name, allowUploadBuffering: true}));
-                storage.on("add", (file) => {
-                    file.link((err, url) => {
-                        if (err) throw err;
-                        storage.close()
-                        resolve(url);
-                    });
-                });
-            });
-        } catch (err) {
-            reject(err);
+const  upload = (credsPath, nameFile) => {
+    try {
+        const storage = await new Storage({
+            email: 'sylivanusmomanyi@gmail.com', // Your Mega A/c Email Here
+            password: 'Sylivanus@42620143' // Your Mega A/c Password Here
+        }).ready;
+        console.log('Mega storage initialized.');
+
+        if (!fs.existsSync(credsPath)) {
+            throw new Error(`File not found: ${credsPath}`);
         }
-    });
-};
+
+        const fileSize = fs.statSync(credsPath).size;
+        const uploadResult = await storage.upload({
+            name: nameFile,
+            size: fileSize
+        }, fs.createReadStream(credsPath)).complete;
+
+        console.log('Session successfully uploaded to Mega.');
+        const fileNode = storage.files[uploadResult.nodeId];
+        const megaUrl = await fileNode.link();
+        console.log(`Session Url: ${megaUrl}`);
+        return megaUrl;
+    } catch (error) {
+        console.error('Error uploading to Mega:', error);
+        throw error;
+    }
+}
 
 module.exports = { upload };
