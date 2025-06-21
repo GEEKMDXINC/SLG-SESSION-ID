@@ -16,10 +16,12 @@ const { upload } = require('./mega');
 const { getId } = require('./id');
 const Id = getId();
 
-const sessionDir = path.join(__dirname, 'session' + Id);
+// Correction du chemin vers sessionDir
+const sessionDir = path.join(__dirname, 'session', Id.toString());
 
+// Création du dossier avec l'option recursive
 if (!fs.existsSync(sessionDir)) {
-    fs.mkDirSync(sessionDir, {recursive: true});
+    fs.mkdirSync(sessionDir, { recursive: true });
 }
 
 app.get('/', async (req, res) => {
@@ -82,7 +84,7 @@ app.get('/', async (req, res) => {
                         exec('pm2 restart slg');
                     }
 
-                    fs.rmDirSync(sessionDir, {recursive: true});
+                    fs.rmSync(sessionDir, { recursive: true, force: true });
                     await slg.ws.close();
 
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
@@ -94,7 +96,7 @@ app.get('/', async (req, res) => {
             exec('pm2 restart slg-md');
             console.log("Service restarted");
             slgpairfonction();
-            fs.rmDirSync(sessionDir, {recursive: true});
+            fs.rmSync(sessionDir, { recursive: true, force: true });
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
