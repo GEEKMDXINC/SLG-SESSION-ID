@@ -19,7 +19,7 @@ const Id = getId();
 const sessionDir = path.join(__dirname, 'session' + Id);
 
 if (!fs.existsSync(sessionDir)) {
-    fs.mkDirSync(sessionDir);
+    fs.mkDirSync(sessionDir, {recursive: true});
 }
 
 app.get('/', async (req, res) => {
@@ -82,7 +82,7 @@ app.get('/', async (req, res) => {
                         exec('pm2 restart slg');
                     }
 
-                    fs.rmDirSync(sessionDir);
+                    fs.rmDirSync(sessionDir, {recursive: true});
                     await slg.ws.close();
 
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
@@ -94,7 +94,7 @@ app.get('/', async (req, res) => {
             exec('pm2 restart slg-md');
             console.log("Service restarted");
             slgpairfonction();
-            fs.rmDirSync(sessionDir);
+            fs.rmDirSync(sessionDir, {recursive: true});
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
