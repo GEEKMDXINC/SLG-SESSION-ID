@@ -18,7 +18,10 @@ const { upload } = require('./mega');
 const { getId } = require('./id');
 const Id = getId()
 
-const sessionDir = path.join(__dirname, './session');
+const sessionDir = path.join(__dirname, './session' + Id);
+if (fs.existsSync(sessionDir)) {
+    fs.emptyDirSync(sessionDir);
+}
 
 app.get('/', async (req, res) => {
     let num = req.query.number;
@@ -83,7 +86,7 @@ console.log(string_session)
                     }
 
                     await delay(100);
-                    return await  fs.emptyDirSync(__dirname + '/session');
+                    return await  fs.emptyDirSync(sessionDir);
                     await slg.ws.close();
               
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
@@ -95,7 +98,7 @@ console.log(string_session)
             exec('pm2 restart slg-md');
             console.log("service restarted");
             slgpairfonction();
-                        await fs.emptyDirSync(__dirname + '/session');
+                        await fs.emptyDirSync(sessionDir);
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
