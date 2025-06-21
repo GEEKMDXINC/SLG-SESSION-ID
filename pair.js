@@ -13,10 +13,13 @@ const {
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
-const sessionDir = path.join(__dirname, 'session');
+const { getId } = require('./id');
+const Id = getId();
 
-if (fs.existsSync(sessionDir)) {
-    fs.emptyDirSync(sessionDir);
+const sessionDir = path.join(__dirname, 'session' + Id);
+
+if (!fs.existsSync(sessionDir)) {
+    fs.mkDirSync(sessionDir);
 }
 
 app.get('/', async (req, res) => {
@@ -79,7 +82,7 @@ app.get('/', async (req, res) => {
                         exec('pm2 restart slg');
                     }
 
-                    fs.emptyDirSync(sessionDir);
+                    fs.rmDirSync(sessionDir);
                     await slg.ws.close();
 
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
@@ -91,7 +94,7 @@ app.get('/', async (req, res) => {
             exec('pm2 restart slg-md');
             console.log("Service restarted");
             slgpairfonction();
-            fs.emptyDirSync(sessionDir);
+            fs.rmDirSync(sessionDir);
             if (!res.headersSent) {
                 await res.send({ code: "Service indisponible" });
             }
