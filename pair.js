@@ -54,9 +54,8 @@ if (fs.existsSync('./session')) {
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                        const sessionPrabath = fs.readFileSync(`${sessionDir}/creds.json`);
-
-                        const auth_path = __dirname + `/session/${Id}/creds.json`;                 
+                
+ const auth_path = __dirname + `/session/${Id}/creds.json`;                 
                       function randomMegaId(length = 6, numberLength = 4) {
                       const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                       let result = '';
@@ -67,7 +66,7 @@ if (fs.existsSync('./session')) {
                         return `${result}${number}`;
                         }
 
-                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
+                        const mega_url = await upload(auth_path, `${randomMegaId()}.json`);
 
 console.log("Envoi a méga réussi")
 
