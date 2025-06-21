@@ -17,7 +17,7 @@ const { getId } = require('./id');
 const Id = getId();
 
 // Correction du chemin vers sessionDir
-const sessionDir = path.join(__dirname, 'session', Id.toString());
+const sessionDir = path.join(__dirname, 'session' + Id);
 
 // Création du dossier avec l'option recursive
 if (!fs.existsSync(sessionDir)) {
