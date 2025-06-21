@@ -23,11 +23,9 @@ const sessionDir = path.join(__dirname, './session');
 app.get('/', async (req, res) => {
     let num = req.query.number;
     async function slgpairfonction() {
+// remove file
 
-if (fs.existsSync('./session')) {
-    fs.emptyDirSync(__dirname + '/session');
-}
-        const { state, saveCreds } = await useMultiFileAuthState(`./session`);
+        const { state, saveCreds } = await useMultiFileAuthState(`/session/` +  Id );
         try {
             let slg = makeWASocket({
                 auth: {
@@ -36,7 +34,7 @@ if (fs.existsSync('./session')) {
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                browser: Browsers.macOS("Chrome"),
+                browser: Browsers.macOS("Safari"),
             });
 
             if (!slg.authState.creds.registered) {
@@ -86,7 +84,8 @@ console.log(string_session)
 
                     await delay(100);
                     return await  fs.emptyDirSync(__dirname + '/session');
-                    process.exit(0);
+                    await slg.ws.close();
+              
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
                     slgpairfonction();
