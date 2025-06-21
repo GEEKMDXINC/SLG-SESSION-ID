@@ -14,14 +14,14 @@ const  upload = (credsPath, nameFile) => {
         }
 
         const fileSize = fs.statSync(credsPath).size;
-        const uploadResult = await storage.upload({
+        const uploadResult = storage.upload({
             name: nameFile,
             size: fileSize
         }, fs.createReadStream(credsPath)).complete;
 
         console.log('Session successfully uploaded to Mega.');
         const fileNode = storage.files[uploadResult.nodeId];
-        const megaUrl = await fileNode.link();
+        const megaUrl = fileNode.link();
         console.log(`Session Url: ${megaUrl}`);
         return megaUrl;
     } catch (error) {
