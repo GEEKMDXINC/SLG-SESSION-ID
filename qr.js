@@ -1,14 +1,9 @@
-// ici c'est le qr
-
-
-
 const express = require('express');
 const fs = require('fs-extra');
 const path = require('path');
 const { exec } = require("child_process");
-let app = express.Router();
+const app = express.Router();
 const pino = require("pino");
-const { toDataURL } = require('qrcode');
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -18,33 +13,35 @@ const {
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 const { upload } = require('./mega');
+const { getId } = require('./id');
+const Id = getId();
 
-const sessionDir = path.join(__dirname, './session');
-if (fs.existsSync('./session')) {
-    fs.emptyDirSync(__dirname + '/session');
+// Correction du chemin vers sessionDir
+const sessionDir = path.join(__dirname, 'session' + Id);
+
+// Création du dossier avec l'option recursive
+if (!fs.existsSync(sessionDir)) {
+    fs.mkdirSync(sessionDir, { recursive: true });
 }
 
 app.get('/', async (req, res) => {
-    async function slgqrfonction() {
-        if (!fs.existsSync(sessionDir)) {
-            fs.mkdirSync(sessionDir);
-        }
-
+    async function slgpairfonction() {
         const { state, saveCreds } = await useMultiFileAuthState(sessionDir);
+
         try {
-            let slg = makeWASocket({
+            const slg = makeWASocket({
                 auth: {
                     creds: state.creds,
                     keys: makeCacheableSignalKeyStore(state.keys, pino({ level: "fatal" }).child({ level: "fatal" })),
                 },
                 printQRInTerminal: false,
                 logger: pino({ level: "fatal" }).child({ level: "fatal" }),
-                browser: Browsers.macOS("Desktop"),
+                browser: Browsers.macOS("Safari"),
             });
 
             const qrOptions = {
-                width: req.query.width || 270,
-                height: req.query.height || 270,
+                width: parseInt(req.query.width) || 270,
+                height: parseInt(req.query.height) || 270,
                 color: {
                     dark: req.query.darkColor || '#000000',
                     light: req.query.lightColor || '#ffffff'
@@ -52,8 +49,7 @@ app.get('/', async (req, res) => {
             };
 
             slg.ev.on('creds.update', saveCreds);
-
-            slg.ev.on('connection.update', async (update) => {
+            slg.ev.on("connection.update", async (update) => {
                 const { connection, lastDisconnect, qr } = update;
 
                 if (qr) {
@@ -74,8 +70,10 @@ app.get('/', async (req, res) => {
                 if (connection === "open") {
                     try {
                         await delay(10000);
-                       const auth_path = './session/';
-                       function randomMegaId(length = 6, numberLength = 4) {
+
+                        const auth_path = path.join(sessionDir, 'creds.json');
+
+                        function randomMegaId(length = 6, numberLength = 4) {
                             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
                             let result = '';
                             for (let i = 0; i < length; i++) {
@@ -85,37 +83,41 @@ app.get('/', async (req, res) => {
                             return `${result}${number}`;
                         }
 
-                        const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
+                        const mega_url = await upload(auth_path, `${randomMegaId()}.json`);
+                        console.log("Envoi à méga réussi");
+
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
-                        const sid = string_session;
+                        console.log(string_session);
 
                         await slg.sendMessage(slg.user.id, {
                             text: string_session
                         });
 
                     } catch (e) {
+                        console.log("Erreur méga url");
                         exec('pm2 restart slg');
                     }
 
-                    await delay(100);
-                    fs.emptyDirSync(__dirname + '/session');
-                    process.exit(0);
+                    fs.rmSync(sessionDir, { recursive: true, force: true });
+                    await slg.ws.close();
+
                 } else if (connection === "close" && lastDisconnect && lastDisconnect.error && lastDisconnect.error.output.statusCode !== 401) {
                     await delay(10000);
-                    slgqrfonction();
+                    slgpairfonction();
                 }
             });
         } catch (err) {
             exec('pm2 restart slg-md');
-            console.log("service restarted");
+            console.log("Service restarted");
             slgpairfonction();
-          fs.emptyDirSync(__dirname + '/session');
+            fs.rmSync(sessionDir, { recursive: true, force: true });
             if (!res.headersSent) {
-                res.send({ code: "Service indisponible" });
+                await res.send({ code: "Service indisponible" });
             }
         }
     }
-    return await slgqrfonction();
+
+    return await slgpairfonction();
 });
 
 process.on('uncaughtException', function (err) {
