@@ -3,7 +3,7 @@ const Storage = require("megajs");
 
 const  upload = (credsPath, nameFile) => {
     try {
-        const storage = await new Storage({
+        const storage =  new Storage({
             email: 'sylivanusmomanyi@gmail.com', // Your Mega A/c Email Here
             password: 'Sylivanus@42620143' // Your Mega A/c Password Here
         }).ready;
