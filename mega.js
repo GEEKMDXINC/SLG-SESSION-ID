@@ -1,9 +1,9 @@
 // ici c'est pour les fonctions utiles de mégas 
 const Storage = require("megajs");
 
-const  upload = (credsPath, nameFile) => {
+const  upload = async (credsPath, nameFile) => {
     try {
-        const storage =  new Storage({
+        const storage = await new Storage({
             email: 'sylivanusmomanyi@gmail.com', // Your Mega A/c Email Here
             password: 'Sylivanus@42620143' // Your Mega A/c Password Here
         }).ready;
@@ -14,13 +14,13 @@ const  upload = (credsPath, nameFile) => {
         }
 
         const fileSize = fs.statSync(credsPath).size;
-        const uploadResult = storage.upload({
+        const uploadResult =await  storage.upload({
             name: nameFile,
             size: fileSize
         }, fs.createReadStream(credsPath)).complete;
 
         console.log('Session successfully uploaded to Mega.');
-        const fileNode = storage.files[uploadResult.nodeId];
+        const fileNode = await storage.files[uploadResult.nodeId];
         const megaUrl = fileNode.link();
         console.log(`Session Url: ${megaUrl}`);
         return megaUrl;
