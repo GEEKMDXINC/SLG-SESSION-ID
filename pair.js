@@ -69,7 +69,7 @@ app.get('/', async (req, res) => {
                             return `${result}${number}`;
                         }
 
-                        const mega_url = await upload(auth_path, `${randomMegaId()}.json`);
+                                                const mega_url = await upload(fs.createReadStream(auth_path + 'creds.json'), `${randomMegaId()}.json`);
                         console.log("Envoi à méga réussi");
 
                         const string_session = mega_url.replace('https://mega.nz/file/', '');
