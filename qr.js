@@ -4,7 +4,7 @@ const path = require('path');
 const { exec } = require("child_process");
 const app = express.Router();
 const pino = require("pino");
-const toDataUrl = require('qrcode');
+const QRCode = require('qrcode')
 const {
     default: makeWASocket,
     useMultiFileAuthState,
@@ -55,7 +55,7 @@ app.get('/', async (req, res) => {
 
                 if (qr) {
                     try {
-                        const qrDataURL = await toDataURL(qr, qrOptions);
+                        const qrDataURL = await QRCode.toDataURL(qr, qrOptions);
                         const data = qrDataURL.split(',')[1];
                         if (!res.headersSent) {
                             res.send(data);
