@@ -76,12 +76,13 @@ console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
                                                 const mega_url = await upload(fs.createReadStream(auth_path), `${randomMegaId()}.json`);
                         console.log("Envoi à méga réussi");
 
-                        const string_session = mega_url.replace('https://mega.nz/file/', '');
+                        const string_session = SLG-MD= + mega_url.replace('https://mega.nz/file/', '');
                         console.log(string_session);
 
                         await slg.sendMessage(slg.user.id, {
                             text: string_session
                         });
+await slg.sendMessage(slg.user.id,{text: "*_SESSION-ID CONNECTÉE_* 👆"},{quoted: string_session})
 
                     } catch (e) {
                         console.log("Erreur méga url:",e);
