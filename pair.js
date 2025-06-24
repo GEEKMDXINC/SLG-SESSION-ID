@@ -55,12 +55,13 @@ app.get('/', async (req, res) => {
                 const { connection, lastDisconnect } = s;
                 if (connection === "open") {
                     try {
-const credsData = fs.readJsonSync(auth_path);
-console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
 
                         await delay(10000);
 
                         const auth_path = path.join(sessionDir, 'creds.json');
+
+const credsData = fs.readJsonSync(auth_path);
+console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
 
                         function randomMegaId(length = 6, numberLength = 4) {
                             const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
