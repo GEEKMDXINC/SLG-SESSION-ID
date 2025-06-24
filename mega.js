@@ -34,4 +34,4 @@ const upload = (data, name) => {
     });
 };
 
-module.exports : { upload }
+module.exports = { upload }
