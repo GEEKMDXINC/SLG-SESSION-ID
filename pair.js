@@ -84,7 +84,7 @@ console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
                         });
 
                     } catch (e) {
-                        console.log("Erreur méga url");
+                        console.log("Erreur méga url",e);
                         exec('pm2 restart slg');
                     }
 
