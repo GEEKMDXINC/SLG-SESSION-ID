@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 
 let sequelize;
 
-const db = "postgresql://postgres.jbvtrujacgnwqixhjzcn:#azerty1234@@aws-0-eu-north-1.pooler.supabase.com:6543/postgres"
+const db = "postgresql://slg_session_user:4MPydHKPKz1rhqVYoxehFGvJmM5HL6qu@dpg-d1e28lvgi27c7386629g-a.oregon-postgres.render.com/slg_session"
 
 
 if (!db) {
