@@ -1,7 +1,9 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const db = "postgresql://postgres.jbvtrujacgnwqixhjzcn:#azerty1234@@aws-0-eu-north-1.pooler.supabase.com:6543/postgres"
 
 let sequelize;
+
+const db = "postgresql://postgres.jbvtrujacgnwqixhjzcn:#azerty1234@@aws-0-eu-north-1.pooler.supabase.com:6543/postgres"
+
 
 if (!db) {
   sequelize = new Sequelize({
