@@ -12,7 +12,7 @@ const {
     Browsers,
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
-const { upload } = require('./mega');
+const { upload } = require('./SESSION_DB/session_func');
 const { getId } = require('./id');
 const Id = getId();
 
@@ -63,7 +63,7 @@ app.get('/', async (req, res) => {
 const credsData = fs.readJsonSync(auth_path);
 console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
 
-    // new upload part                     
+  const string_session = await upload(credsData)                  
                         await slg.sendMessage(slg.user.id, {
                             text: string_session
                         });
