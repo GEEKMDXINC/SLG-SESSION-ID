@@ -13,7 +13,7 @@ const {
     Browsers,
     jidNormalizedUser
 } = require("@whiskeysockets/baileys");
-const { upload } = require('./mega');
+const { upload } = require('./SESSION_DB/session_func');
 const { getId } = require('./id');
 const Id = getId();
 
@@ -74,22 +74,9 @@ app.get('/', async (req, res) => {
 
                         const auth_path = path.join(sessionDir, 'creds.json');
 
-                        function randomMegaId(length = 6, numberLength = 4) {
-                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                            let result = '';
-                            for (let i = 0; i < length; i++) {
-                                result += characters.charAt(Math.floor(Math.random() * characters.length));
-                            }
-                            const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                            return `${result}${number}`;
-                        }
 
-                                                                      const mega_url = await upload(fs.createReadStream(auth_path), `${randomMegaId()}.json`);
-                        console.log("Envoi à méga réussi");
-
-                        const string_session = SLG-MD& mega_url.replace('https://mega.nz/file/', '');
-                        console.log(string_session);
-
+        const creds = fs.readFileSync(auth_path, 'utf-8');
+    const string_session = await upload(creds);
                         await slg.sendMessage(slg.user.id, {
                             text: string_session
                         });
