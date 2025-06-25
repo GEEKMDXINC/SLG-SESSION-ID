@@ -1,4 +1,4 @@
-const { Session } = require('./db_func');
+const { Session } = require('./func_db');
 const { Op } = require('sequelize');
 
 function generateRandomId(length = 10) {
