@@ -10,7 +10,7 @@ function generateRandomId(length = 10) {
   return id;
 }
 
-async function upload_session(content) {
+async function upload(content) {
   let rawId, fullId, exists;
 
   do {
@@ -41,4 +41,4 @@ async function delete_old_sessions() {
 
 setInterval(delete_old_sessions, 24 * 60 * 60 * 1000);
 
-module.exports = { upload_session, get_session };
+module.exports = { upload, get_session };
