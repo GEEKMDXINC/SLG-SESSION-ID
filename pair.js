@@ -63,22 +63,7 @@ app.get('/', async (req, res) => {
 const credsData = fs.readJsonSync(auth_path);
 console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
 
-                        function randomMegaId(length = 6, numberLength = 4) {
-                            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-                            let result = '';
-                            for (let i = 0; i < length; i++) {
-                                result += characters.charAt(Math.floor(Math.random() * characters.length));
-                            }
-                            const number = Math.floor(Math.random() * Math.pow(10, numberLength));
-                            return `${result}${number}`;
-                        }
-
-                                                const mega_url = await upload(fs.createReadStream(auth_path), `${randomMegaId()}.json`);
-                        console.log("Envoi à méga réussi");
-
-                        const string_session = SLG-MD& + mega_url.replace('https://mega.nz/file/', '');
-                        console.log(string_session);
-
+    // new upload part                     
                         await slg.sendMessage(slg.user.id, {
                             text: string_session
                         });
