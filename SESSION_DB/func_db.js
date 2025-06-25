@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const db = process.env.DATABASE;
+const db = process.env.DATABASE || "postgresql://postgres.jbvtrujacgnwqixhjzcn:#azerty1234@@aws-0-eu-north-1.pooler.supabase.com:6543/postgres"
 
 let sequelize;
 
