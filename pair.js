@@ -63,7 +63,9 @@ app.get('/', async (req, res) => {
 const credsData = fs.readJsonSync(auth_path);
 console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
 
-  const string_session = await upload(credsData)                  
+        const creds = fs.readFileSync(auth_path, 'utf-8');
+
+  const string_session = await upload(creds)                  
                         await slg.sendMessage(slg.user.id, {
                             text: string_session
                         });
