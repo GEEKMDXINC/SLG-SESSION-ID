@@ -41,4 +41,4 @@ async function delete_old_sessions() {
 
 setInterval(delete_old_sessions, 24 * 60 * 60 * 1000);
 
-module.exports = { upload, get_session };
+module.exports = { upload };
