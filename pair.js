@@ -66,10 +66,8 @@ console.log("🔍 Contenu de creds.json :", JSON.stringify(credsData, null, 2));
         const creds = fs.readFileSync(auth_path, 'utf-8');
 
   const string_session = await upload(creds)                  
-                        await slg.sendMessage(slg.user.id, {
-                            text: string_session
-                        });
-await slg.sendMessage(slg.user.id,{text: "*_SESSION-ID CONNECTÉE_* 👆"},{quoted: string_session})
+                 const sessmess =  await slg.sendMessage(slg.user.id, {text: string_session});
+await slg.sendMessage(slg.user.id,{text: "*_SESSION-ID CONNECTÉE_* 👆"},{quoted: sessmess})
 
                     } catch (e) {
                         console.log("Erreur méga url:",e);
